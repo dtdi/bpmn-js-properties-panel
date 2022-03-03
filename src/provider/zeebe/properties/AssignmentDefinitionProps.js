@@ -17,6 +17,11 @@ import {
   useService
 } from '../../../hooks';
 
+import {
+  getPath,
+  pathStringify
+} from '../../../utils/PathUtil';
+
 
 export function AssignmentDefinitionProps(props) {
   const {
@@ -27,14 +32,19 @@ export function AssignmentDefinitionProps(props) {
     return [];
   }
 
+  const businessObject = getBusinessObject(element),
+        assignmentDefinition = getAssignmentDefinition(element);
+
   return [
     {
       id: 'assignmentDefinitionAssignee',
+      path: assignmentDefinition ? pathStringify([ ...getPath(assignmentDefinition, businessObject), 'assignee' ]) : undefined,
       component: Assignee,
       isEdited: isTextFieldEntryEdited
     },
     {
       id: 'assignmentDefinitionCandidateGroups',
+      path: assignmentDefinition ? pathStringify([ ...getPath(assignmentDefinition, businessObject), 'candidateGroups' ]) : undefined,
       component: CandidateGroups,
       isEdited: isTextFieldEntryEdited
     }
@@ -43,7 +53,9 @@ export function AssignmentDefinitionProps(props) {
 
 function Assignee(props) {
   const {
-    element
+    element,
+    id,
+    path
   } = props;
 
   const commandStack = useService('commandStack');
@@ -120,7 +132,8 @@ function Assignee(props) {
 
   return TextFieldEntry({
     element,
-    id: 'assignmentDefinitionAssignee',
+    id,
+    path,
     label: translate('Assignee'),
     getValue,
     setValue,
@@ -130,7 +143,9 @@ function Assignee(props) {
 
 function CandidateGroups(props) {
   const {
-    element
+    element,
+    id,
+    path
   } = props;
 
   const commandStack = useService('commandStack');
@@ -206,7 +221,8 @@ function CandidateGroups(props) {
 
   return TextFieldEntry({
     element,
-    id: 'assignmentDefinitionCandidateGroups',
+    id,
+    path,
     label: translate('Candidate groups'),
     getValue,
     setValue,
