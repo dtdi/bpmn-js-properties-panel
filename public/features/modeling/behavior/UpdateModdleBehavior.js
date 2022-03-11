@@ -6,7 +6,6 @@ export default function UpdateModdleBehavior(injector, modeling) {
   injector.invoke(CommandInterceptor, this);
 
   this.preExecute("element.updateModdleProperties", function (event) {
-    console.log(event);
     var context = event.context,
       element = context.element,
       moddleElement = context.moddleElement;

@@ -1,7 +1,7 @@
 import { isAny } from "./util/ModelingUtil";
 
 import { is } from "bpmn-js/lib/util/ModelUtil";
-import { ensureModdleProperty } from "../../../util/BsimUtil";
+import { ensureModdleProperty } from "../../util/BsimUtil";
 
 export default class BsimFactory {
   constructor(moddle) {

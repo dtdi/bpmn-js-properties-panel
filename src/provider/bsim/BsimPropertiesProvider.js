@@ -4,75 +4,11 @@ import { findIndex } from "min-dash";
 
 import { mutate as arrayMove } from "array-move";
 
-import {
-  // AsynchronousContinuationsProps,
-  // BusinessKeyProps,
-  // CallActivityProps,
-  // CandidateStarterProps,
-  //ConditionProps,
-  // ConnectorInputProps,
-  // ConnectorOutputProps,
-  // ErrorProps,
-  // ErrorsProps,
-  // EscalationProps,
-  // ExtensionPropertiesProps,
-  // ExternalTaskPriorityProps,
-  // FieldInjectionProps,
-  // FormDataProps,
-  // FormProps,
-  // HistoryCleanupProps,
-  // ImplementationProps,
-  ArrivalRateProps,
-  // InMappingPropagationProps,
-  // InMappingProps,
-  // InputProps,
-  // JobExecutionProps,
-  // MultiInstanceProps,
-  // OutMappingPropagationProps,
-  // OutMappingProps,
-  // OutputProps,
-  // ExecutionListenerProps,
-  // TaskListenerProps,
-  // ProcessVariablesProps,
-  // ScriptTaskProps,
-  // TasklistProps,
-  //UserAssignmentProps,
-  VersionTagProps,
-} from "./properties";
+import { DurationSelectionProps } from "./properties";
 
 const LOW_PRIORITY = 500;
 
-const BSIM_GROUPS = [
-  // ImplementationGroup,
-  // ProcessVariablesGroup,
-  // ErrorsGroup,
-  //UserAssignmentGroup,
-  // FormGroup,
-  // FormDataGroup,
-  // TaskListenerGroup,
-  StartInitiatorGroup,
-  // ScriptGroup,
-  //ConditionGroup,
-  // CallActivityGroup,
-  // AsynchronousContinuationsGroup,
-  // JobExecutionGroup,
-  // InMappingPropagationGroup,
-  // InMappingGroup,
-  // InputGroup,
-  // ConnectorInputGroup,
-  // OutMappingPropagationGroup,
-  // OutMappingGroup,
-  // OutputGroup,
-  // ConnectorOutputGroup,
-  // CandidateStarterGroup,
-  // ExecutionListenerGroup,
-  // ExtensionPropertiesGroup,
-  // ExternalTaskGroup,
-  // FieldInjectionGroup,
-  // BusinessKeyGroup,
-  // HistoryCleanupGroup,
-  //TasklistGroup,
-];
+const BSIM_GROUPS = [StartInitiatorGroup, DurationGroup, SetupDurationGroup];
 
 /**
  * Provides `camunda` namespace properties.
@@ -155,17 +91,6 @@ function updateGeneralGroup(groups, element) {
   if (!generalGroup) {
     return;
   }
-
-  const { entries } = generalGroup;
-
-  // (1) add version tag before executable (if existing)
-  const executableEntry = findIndex(
-    entries,
-    (entry) => entry.id === "isExecutable"
-  );
-  const insertIndex = executableEntry >= 0 ? executableEntry : entries.length;
-
-  entries.splice(insertIndex, 0, ...VersionTagProps({ element }));
 }
 
 function updateErrorGroup(groups, element) {
@@ -204,12 +129,29 @@ function updateEscalationGroup(groups, element) {
   EscalationProps({ element, entries });
 }
 
-function ImplementationGroup(element) {
+function DurationGroup(element) {
   const group = {
-    label: "Implementation",
-    id: "Bsim__Implementation",
+    label: "Duration",
+    id: "Bsim__Duration",
     component: Group,
-    entries: [...ImplementationProps({ element })],
+    entries: [...DurationSelectionProps({ element, type: "bsim:duration" })],
+  };
+
+  if (group.entries.length) {
+    return group;
+  }
+
+  return null;
+}
+
+function SetupDurationGroup(element) {
+  const group = {
+    label: "Setup Duration",
+    id: "Bsim__SetupDuration",
+    component: Group,
+    entries: [
+      ...DurationSelectionProps({ element, type: "bsim:setUpDuration" }),
+    ],
   };
 
   if (group.entries.length) {
@@ -299,7 +241,13 @@ function StartInitiatorGroup(element, injector) {
     label: "Arrival Rate",
     id: "Bsim__ArrivalRate",
     component: Group,
-    entries: [...ArrivalRateProps({ element, injector })],
+    entries: [
+      ...DurationSelectionProps({
+        element,
+        type: "bsim:arrivalRate",
+        injector,
+      }),
+    ],
   };
 
   if (group.entries.length) {

@@ -13,95 +13,32 @@ import { without } from "min-dash";
 import { useService } from "../../../hooks";
 import { createElement } from "../../../utils/ElementUtil";
 import { getBsimObject } from "../utils/BsimUtil";
+import { getDescr, getName } from "../utils/helper";
 
-export function ArrivalRateProps(props) {
-  const { element } = props;
-
-  if (!isArrivalRate(element)) {
-    return [];
-  }
-  const entries = [];
-
-  entries.push({
-    id: "timeUnit",
-    component: TimeUnit,
-    isEdited: isSelectEntryEdited,
-  });
-
-  entries.push(...DistributionProps({ element }));
-
-  return entries;
-}
-
-function TimeUnit(props) {
-  const { element } = props;
-
-  const commandStack = useService("commandStack");
-  const translate = useService("translate");
-
-  const bsimObject = getBsimObject(element);
-  const arrivalRate = bsimObject.get("bsim:arrivalRate");
-
-  const getValue = () => {
-    return arrivalRate.get("bsim:timeUnit");
-  };
-
-  const setValue = (value) => {
-    commandStack.execute("element.updateModdleProperties", {
-      element,
-      moddleElement: arrivalRate,
-      properties: { timeUnit: value },
-    });
-  };
-
-  const getOptions = () => [
-    { value: "", label: translate("<none>") },
-    { value: "HOURS", label: translate("HOURS") },
-    { value: "MINUTES", label: translate("MINUTES") },
-    { value: "DAYS", label: translate("DAYS") },
-    { value: "SECONDS", label: translate("SECONDS") },
-    { value: "MICROSECONDS", label: translate("MICROSECONDS") },
-    { value: "MILLISECONDS", label: translate("MILLISECONDS") },
-    { value: "NANOSECONDS", label: translate("NANOSECONDS") },
-  ];
-
-  return SelectEntry({
-    element,
-    id: "timeUnit",
-    label: translate("Time Unit"),
-    getValue,
-    setValue,
-    getOptions,
-  });
-}
-
-function DistributionProps(props) {
-  const { element } = props;
-  const idPrefix = "arrivalRate";
+export function DistributionProps(props) {
+  const { element, idPrefix, distribution, container } = props;
 
   const entries = [];
-  const bsimObject = getBsimObject(element);
-  const arrivaRate = bsimObject.get("bsim:arrivalRate");
-  const distribution = arrivaRate.get("bsim:distribution");
-  const distributionType = getDistributionType(distribution);
 
   entries.push({
     id: `${idPrefix}-distributionType`,
     component: DistributionType,
     isEdited: isSelectEntryEdited,
     distribution: distribution,
+    container: container,
   });
 
   if (!is(distribution, "bsim:arbitraryFiniteProbabilityDistribution")) {
-    const typeDescriptor = moddle.getTypeDescriptor(distributionType);
+    const typeDescriptor = moddle.getTypeDescriptor(distribution.$type);
 
     entries.push(
       ...typeDescriptor.properties.map((property) => {
         return {
           id: `${idPrefix}-${property.type}`,
           component: NumericField,
-          isEdited: isTextFieldEntryEdited,
           property: property.type,
+          distribution: distribution,
+          container: container,
         };
       })
     );
@@ -110,10 +47,69 @@ function DistributionProps(props) {
       id: `${idPrefix}-fields`,
       component: Entries,
       distribution,
+      container,
     });
   }
 
   return entries;
+}
+
+function DistributionType(props) {
+  const { element, distribution, container } = props;
+
+  const commandStack = useService("commandStack");
+  const translate = useService("translate");
+  const moddle = useService("moddle");
+  const bpmnFactory = useService("bpmnFactory");
+
+  const getOptions = () => {
+    return moddle
+      .getPackage("bsim")
+      .types.filter((e) => e.superClass?.includes("Distribution"))
+      .map((e) => {
+        return {
+          value: `bsim:${e.name}`,
+          label: e.meta?.displayName || translate(e.name),
+        };
+      });
+  };
+
+  const getValue = () => {
+    return distribution.$type;
+  };
+
+  const setValue = (value) => {
+    if (value === distribution.$type) return;
+
+    const newDistribution = inflate(distribution, value, moddle, bpmnFactory);
+    newDistribution.$parent = container;
+
+    commandStack.execute("element.updateModdleProperties", {
+      element,
+      moddleElement: container,
+      properties: { distribution: newDistribution },
+    });
+  };
+
+  return (
+    <>
+      <div className="bio-properties-panel-entry">
+        <div className={"bio-properties-panel-description"}>
+          {getDescr(null, "bsim:Distribution")}
+        </div>
+      </div>
+      <SelectEntry
+        element={element}
+        id={"distributionType"}
+        isEdited={isSelectEntryEdited}
+        label={getName(null, "bsim:Distribution")}
+        description={getDescr(null, getValue())}
+        getValue={getValue}
+        setValue={setValue}
+        getOptions={getOptions}
+      />
+    </>
+  );
 }
 
 function Entries(props) {
@@ -268,15 +264,11 @@ function FrequencyProperty(props) {
 }
 
 function NumericField(props) {
-  const { element, property } = props;
+  const { element, property, distribution } = props;
 
   const commandStack = useService("commandStack");
   const debounce = useService("debounceInput");
   const moddle = useService("moddle");
-
-  const bsimObject = getBsimObject(element);
-  const arrivaRate = bsimObject.get("bsim:arrivalRate");
-  const distribution = arrivaRate.get("bsim:distribution");
 
   const typeDescriptor = moddle.getTypeDescriptor(distribution.$type);
 
@@ -378,6 +370,7 @@ function NumericField(props) {
     <TextFieldEntry
       element={element}
       id={property}
+      isEdited={isTextFieldEntryEdited}
       label={`${getName(null, property)}: ${getDescr(null, property)}`}
       getValue={getValue}
       setValue={setValue}
@@ -387,77 +380,7 @@ function NumericField(props) {
   );
 }
 
-function DistributionType(props) {
-  const { element, distribution } = props;
-
-  const commandStack = useService("commandStack");
-  const translate = useService("translate");
-  const moddle = useService("moddle");
-  const bpmnFactory = useService("bpmnFactory");
-
-  const getOptions = () => {
-    return moddle
-      .getPackage("bsim")
-      .types.filter((e) => e.superClass?.includes("Distribution"))
-      .map((e) => {
-        return {
-          value: `bsim:${e.name}`,
-          label: e.meta?.displayName || translate(e.name),
-        };
-      });
-  };
-
-  const bsimObject = getBsimObject(element);
-  const arrivalRate = bsimObject.get("bsim:arrivalRate");
-
-  const getValue = () => {
-    return distribution.$type;
-  };
-
-  const setValue = (value) => {
-    if (value === distribution.$type) return;
-
-    const newDistribution = inflate(distribution, value, moddle, bpmnFactory);
-    newDistribution.$parent = arrivalRate;
-
-    commandStack.execute("element.updateModdleProperties", {
-      element,
-      moddleElement: arrivalRate,
-      properties: { distribution: newDistribution },
-    });
-  };
-
-  return (
-    <>
-      <div className="bio-properties-panel-entry">
-        <p className={"bio-properties-panel-description"}>
-          {getDescr(null, "bsim:Distribution")}
-        </p>
-      </div>
-      <SelectEntry
-        element={element}
-        id={"distributionType"}
-        label={getName(null, "bsim:Distribution")}
-        description={getDescr(null, getValue())}
-        getValue={getValue}
-        setValue={setValue}
-        getOptions={getOptions}
-      />
-    </>
-  );
-}
-
 // helper ///////////////////
-
-function isArrivalRate(element) {
-  return (
-    is(element, "bpmn:StartEvent") && !is(element.parent, "bpmn:SubProcess")
-  );
-}
-
-function getDistributionType(distribution) {
-  return distribution.$type;
-}
 
 let values = {};
 function inflate(oldDistribution, newType, moddle, bpmnFactory) {
@@ -492,42 +415,7 @@ function getValueOrDefault(propertyType) {
   if (values[propertyType]) {
     return values[propertyType];
   }
-  return 0.5;
-}
-
-function getProperty(property, type) {
-  const moddle = useService("moddle");
-
-  if (!type) {
-    type = this.elemStr;
-  }
-
-  if (!property) {
-    return moddle.getTypeDescriptor(type);
-  }
-  const Type = moddle.getType(type);
-  return moddle.getPropertyDescriptor(Type, property);
-}
-
-function getDescr(property, type) {
-  return getMetaProp(property, type, "description");
-}
-
-function getMetaProp(property, type, value) {
-  const meta = getProperty(property, type)?.meta || {};
-  return meta[value] || null;
-}
-
-function getName(property, type) {
-  return (
-    getMetaProp(property, type, "displayName") ||
-    property // insert a space before all caps
-      .replace(/([A-Z])/g, " $1")
-      // uppercase the first character
-      .replace(/^./, function (str) {
-        return str.toUpperCase();
-      })
-  );
+  return 0;
 }
 
 function compareName(field, anotherField) {

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bsim="http://bsim.hpi.uni-potsdam.de/scylla/simModel" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:abpr="http://github.com/dtdi/dtdi" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
-  <bpmn:process id="Process_1" isExecutable="true" camunda:historyTimeToLive="a">
-    <bpmn:startEvent id="StartEvent_1">
+  <bpmn:process id="Process_1" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start">
       <bpmn:outgoing>Flow_16hfxyw</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_16hfxyw" sourceRef="StartEvent_1" targetRef="Activity_028cnws" />
     <bpmn:userTask id="Activity_028cnws" name="A">
-
       <bpmn:incoming>Flow_16hfxyw</bpmn:incoming>
       <bpmn:outgoing>Flow_1i911vm</bpmn:outgoing>
     </bpmn:userTask>
@@ -22,18 +21,15 @@
     </bpmn:task>
     <bpmn:sequenceFlow id="Flow_10zvoav" sourceRef="Gateway_110evmr" targetRef="Activity_11zxkzw" />
     <bpmn:task id="Activity_0r5lvus" name="C">
-      <bpmn:incoming>Flow_1tj91ey</bpmn:incoming>
+      <bpmn:incoming>Flow_1qxvjur</bpmn:incoming>
       <bpmn:outgoing>Flow_1rjq8oe</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_1tj91ey" sourceRef="Gateway_110evmr" targetRef="Activity_0r5lvus" />
-    <bpmn:boundaryEvent id="Event_0nmu2ff" attachedToRef="Activity_0r5lvus">
-      <bpmn:outgoing>Flow_1vpz0ho</bpmn:outgoing>
-    </bpmn:boundaryEvent>
-    <bpmn:endEvent id="Event_1v5bf3e">
+    <bpmn:sequenceFlow id="Flow_1tj91ey" sourceRef="Gateway_110evmr" targetRef="Event_0f1y501" />
+    <bpmn:endEvent id="Event_1v5bf3e" name="End">
       <bpmn:incoming>Flow_0197qua</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0197qua" sourceRef="Activity_11zxkzw" targetRef="Event_1v5bf3e" />
-    <bpmn:endEvent id="Event_02mtseb">
+    <bpmn:endEvent id="Event_02mtseb" name="End">
       <bpmn:incoming>Flow_1rjq8oe</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1rjq8oe" sourceRef="Activity_0r5lvus" targetRef="Event_02mtseb" />
@@ -42,49 +38,66 @@
       <bpmn:outgoing>Flow_0sn8zid</bpmn:outgoing>
     </bpmn:task>
     <bpmn:sequenceFlow id="Flow_1vpz0ho" sourceRef="Event_0nmu2ff" targetRef="Activity_0ennpyy" />
-    <bpmn:endEvent id="Event_1137t8i">
+    <bpmn:endEvent id="Event_1137t8i" name="End">
       <bpmn:incoming>Flow_0sn8zid</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0sn8zid" sourceRef="Activity_0ennpyy" targetRef="Event_1137t8i" />
+    <bpmn:boundaryEvent id="Event_0nmu2ff" name="E2" attachedToRef="Activity_0r5lvus">
+      <bpmn:outgoing>Flow_1vpz0ho</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0dsvt9s" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1qxvjur" sourceRef="Event_0f1y501" targetRef="Activity_0r5lvus" />
+    <bpmn:intermediateCatchEvent id="Event_0f1y501" name="E1">
+      <bpmn:incoming>Flow_1tj91ey</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qxvjur</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1ikkm3r" />
+    </bpmn:intermediateCatchEvent>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-      <bpmndi:BPMNEdge id="Flow_16hfxyw_di" bpmnElement="Flow_16hfxyw">
-        <di:waypoint x="215" y="117" />
-        <di:waypoint x="250" y="117" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1i911vm_di" bpmnElement="Flow_1i911vm">
-        <di:waypoint x="350" y="117" />
-        <di:waypoint x="385" y="117" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_10zvoav_di" bpmnElement="Flow_10zvoav">
-        <di:waypoint x="435" y="117" />
-        <di:waypoint x="470" y="117" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1tj91ey_di" bpmnElement="Flow_1tj91ey">
-        <di:waypoint x="410" y="142" />
-        <di:waypoint x="410" y="230" />
-        <di:waypoint x="470" y="230" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0197qua_di" bpmnElement="Flow_0197qua">
-        <di:waypoint x="570" y="117" />
-        <di:waypoint x="612" y="117" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1rjq8oe_di" bpmnElement="Flow_1rjq8oe">
-        <di:waypoint x="570" y="230" />
-        <di:waypoint x="612" y="230" />
+      <bpmndi:BPMNEdge id="Flow_0sn8zid_di" bpmnElement="Flow_0sn8zid">
+        <di:waypoint x="690" y="350" />
+        <di:waypoint x="742" y="350" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1vpz0ho_di" bpmnElement="Flow_1vpz0ho">
         <di:waypoint x="520" y="288" />
         <di:waypoint x="520" y="350" />
         <di:waypoint x="590" y="350" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0sn8zid_di" bpmnElement="Flow_0sn8zid">
-        <di:waypoint x="690" y="350" />
-        <di:waypoint x="742" y="350" />
+      <bpmndi:BPMNEdge id="Flow_1rjq8oe_di" bpmnElement="Flow_1rjq8oe">
+        <di:waypoint x="570" y="230" />
+        <di:waypoint x="612" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0197qua_di" bpmnElement="Flow_0197qua">
+        <di:waypoint x="570" y="117" />
+        <di:waypoint x="612" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tj91ey_di" bpmnElement="Flow_1tj91ey">
+        <di:waypoint x="410" y="142" />
+        <di:waypoint x="410" y="172" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10zvoav_di" bpmnElement="Flow_10zvoav">
+        <di:waypoint x="435" y="117" />
+        <di:waypoint x="470" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i911vm_di" bpmnElement="Flow_1i911vm">
+        <di:waypoint x="350" y="117" />
+        <di:waypoint x="385" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16hfxyw_di" bpmnElement="Flow_16hfxyw">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="250" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qxvjur_di" bpmnElement="Flow_1qxvjur">
+        <di:waypoint x="410" y="208" />
+        <di:waypoint x="410" y="230" />
+        <di:waypoint x="470" y="230" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="185" y="142" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0o6pq6d_di" bpmnElement="Activity_028cnws">
         <dc:Bounds x="250" y="77" width="100" height="80" />
@@ -103,9 +116,15 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1v5bf3e_di" bpmnElement="Event_1v5bf3e">
         <dc:Bounds x="612" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="620" y="142" width="20" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_02mtseb_di" bpmnElement="Event_02mtseb">
         <dc:Bounds x="612" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="620" y="255" width="20" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0ennpyy_di" bpmnElement="Activity_0ennpyy">
         <dc:Bounds x="590" y="310" width="100" height="80" />
@@ -113,14 +132,26 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1137t8i_di" bpmnElement="Event_1137t8i">
         <dc:Bounds x="742" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="750" y="375" width="20" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1hqe2ld_di" bpmnElement="Event_0nmu2ff">
+      <bpmndi:BPMNShape id="Event_048cr7h_di" bpmnElement="Event_0f1y501">
+        <dc:Bounds x="392" y="172" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="330" y="180" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0avfry9_di" bpmnElement="Event_0nmu2ff">
         <dc:Bounds x="502" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="513" y="295" width="14" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
   <bsim:simulationConfiguration processRef="Process_1" processInstances="200" startDateTime="2022-03-07T00:00:00.000+01:00" randomSeed="16956">
-    <bsim:startEvent id="StartEvent_1">
+    <bsim:startEvent id="StartEvent_1" name="Start">
       <bsim:arrivalRate timeUnit="MINUTES">
         <bsim:constantDistribution>
           <bsim:constantValue>10</bsim:constantValue>
@@ -135,6 +166,57 @@
         </bsim:normalDistribution>
       </bsim:duration>
     </bsim:task>
+    <bsim:task id="Activity_11zxkzw">
+      <bsim:duration timeUnit="MINUTES">
+        <bsim:normalDistribution>
+          <bsim:mean>20</bsim:mean>
+          <bsim:standardDeviation>5</bsim:standardDeviation>
+        </bsim:normalDistribution>
+      </bsim:duration>
+    </bsim:task>
+    <bsim:task id="Activity_0r5lvus">
+      <bsim:duration timeUnit="MINUTES">
+        <bsim:normalDistribution>
+          <bsim:mean>20</bsim:mean>
+          <bsim:standardDeviation>5</bsim:standardDeviation>
+        </bsim:normalDistribution>
+      </bsim:duration>
+      <bsim:boundaryEvents>
+        <bsim:boundaryEvent id="Event_0nmu2ff">
+          <bsim:arrivalRate timeUnit="MINUTES">
+            <bsim:normalDistribution>
+              <bsim:mean>20</bsim:mean>
+              <bsim:standardDeviation>5</bsim:standardDeviation>
+            </bsim:normalDistribution>
+          </bsim:arrivalRate>
+          <bsim:eventProbability>1</bsim:eventProbability>
+        </bsim:boundaryEvent>
+      </bsim:boundaryEvents>
+    </bsim:task>
+    <bsim:task id="Activity_0ennpyy">
+      <bsim:duration timeUnit="MINUTES">
+        <bsim:normalDistribution>
+          <bsim:mean>20</bsim:mean>
+          <bsim:standardDeviation>5</bsim:standardDeviation>
+        </bsim:normalDistribution>
+      </bsim:duration>
+    </bsim:task>
+    <bsim:catchEvent id="Event_0f1y501" name="E1">
+      <bsim:arrivalRate timeUnit="MINUTES">
+        <bsim:normalDistribution>
+          <bsim:mean>20</bsim:mean>
+          <bsim:standardDeviation>5</bsim:standardDeviation>
+        </bsim:normalDistribution>
+      </bsim:arrivalRate>
+    </bsim:catchEvent>
+    <bsim:exclusiveGateway id="Gateway_110evmr">
+      <bsim:outgoingSequenceFlow id="Flow_10zvoav">
+        <bsim:branchingProbability>0</bsim:branchingProbability>
+      </bsim:outgoingSequenceFlow>
+      <bsim:outgoingSequenceFlow id="Flow_1tj91ey">
+        <bsim:branchingProbability>0</bsim:branchingProbability>
+      </bsim:outgoingSequenceFlow>
+    </bsim:exclusiveGateway>
   </bsim:simulationConfiguration>
   <bsim:zoneOffset>+01:00</bsim:zoneOffset>
   <bsim:timetables>

@@ -1,6 +1,6 @@
 import { is } from "bpmn-js/lib/util/ModelUtil";
 import Refs from "object-refs";
-import { ensureModdleProperty } from "../../../../util/BsimUtil";
+import { ensureModdleProperty } from "../../../util/BsimUtil";
 import { isAny } from "../util/ModelingUtil";
 
 var bsimRefs = new Refs(
