@@ -1,8 +1,5 @@
-import {
-  isSelectEntryEdited,
-  isTextFieldEntryEdited,
-} from "@bpmn-io/properties-panel";
 import { is, isAny } from "bpmn-js/lib/util/ModelUtil";
+import { useService } from "../../../hooks";
 
 import { getBsimObject } from "../utils/BsimUtil";
 import { DistributionProps } from "./DistributionProps";
@@ -29,16 +26,23 @@ export function DurationSelectionProps(props) {
     return [];
   }
 
+  const propertiesProvider = useService("propertiesProvider");
+
   const entries = [];
 
   const bsimObject = getBsimObject(element);
   const container = bsimObject.get(type);
+
+  const onTimeUnitAdd = () => {
+    console.log(propertiesProvider);
+  };
 
   entries.push({
     id: idPrefix + "-timeUnit",
     idPrefix,
     component: TimeUnitProps,
     container: container,
+    onTimeUnitAdd: onTimeUnitAdd,
   });
 
   if (container) {

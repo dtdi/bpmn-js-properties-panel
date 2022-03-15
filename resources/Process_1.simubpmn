@@ -223,6 +223,9 @@
     <bsim:timetable id="DEFAULT">
       <bsim:timetableItem from="MONDAY" to="FRIDAY" beginTime="09:00:00" endTime="17:00:00" />
     </bsim:timetable>
+    <bsim:timetable id="Second">
+      <bsim:timetableItem from="MONDAY" to="FRIDAY" beginTime="09:00:00" endTime="17:00:00" />
+    </bsim:timetable>
   </bsim:timetables>
   <bsim:resourceData>
     <bsim:dynamicResource id="defaultResource" defaultQuantity="1" defaultTimetableId="DEFAULT" defaultCost="20" defaultTimeUnit="MINUTES" />

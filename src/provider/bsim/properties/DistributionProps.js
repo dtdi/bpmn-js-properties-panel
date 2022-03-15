@@ -12,7 +12,6 @@ import { without } from "min-dash";
 
 import { useService } from "../../../hooks";
 import { createElement } from "../../../utils/ElementUtil";
-import { getBsimObject } from "../utils/BsimUtil";
 import { getDescr, getName } from "../utils/helper";
 
 export function DistributionProps(props) {

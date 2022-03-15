@@ -7,7 +7,7 @@ import { getBsimObject } from "../utils/BsimUtil";
 import { getName } from "../utils/helper";
 
 export function TimeUnitProps(props) {
-  const { element, idPrefix, container } = props;
+  const { element, idPrefix, container, property } = props;
 
   const commandStack = useService("commandStack");
   const translate = useService("translate");
@@ -18,20 +18,24 @@ export function TimeUnitProps(props) {
     return idPrefix === "bsim:setUpDuration";
   };
 
+  const getProperty = () => {
+    return property || "timeUnit";
+  };
+
   const getValue = () => {
-    return container?.get("bsim:timeUnit") || "";
+    return container?.get(getProperty()) || "";
   };
 
   const setValue = (value) => {
+    console.log(bsimObject, container, value);
+
     // (1) remove optional distribution
-    if (value === "") {
-      if (container === undefined) {
-        return;
-      } else {
-        bsimObject.set(idPrefix, undefined);
-      }
+    if (value === "" && isOptional()) {
+      bsimObject.set(idPrefix, undefined);
+      return;
     }
 
+    // (2) set a new provider
     if (value !== "" && container === undefined) {
       const newContainer = createElement(
         idPrefix,
@@ -62,15 +66,28 @@ export function TimeUnitProps(props) {
       );
 
       newContainer.set("bsim:distribution", constantDistr);
-      bsimObject.set(idPrefix, newContainer);
+
+      const properties = {};
+      properties[idPrefix] = newContainer;
+
+      commandStack.execute("element.updateModdleProperties", {
+        element,
+        moddleElement: bsimObject,
+        properties: properties,
+      });
+
       return;
     }
 
     // (0) anyway, set timeUnit
+
+    const properties = {};
+    properties[getProperty()] = value;
+
     commandStack.execute("element.updateModdleProperties", {
       element,
       moddleElement: container,
-      properties: { timeUnit: value },
+      properties,
     });
   };
 
@@ -90,8 +107,8 @@ export function TimeUnitProps(props) {
 
   return SelectEntry({
     element,
-    id: idPrefix + "timeUnit",
-    label: `${getName("timeUnit", idPrefix)}`,
+    id: idPrefix + getProperty(),
+    label: `${getName(getProperty(), idPrefix)}`,
     isEdited: isSelectEntryEdited,
     getValue,
     setValue,

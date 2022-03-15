@@ -4,11 +4,25 @@ import { findIndex } from "min-dash";
 
 import { mutate as arrayMove } from "array-move";
 
-import { DurationSelectionProps } from "./properties";
+import {
+  DurationSelectionProps,
+  BsimConfigurationProps,
+  BsimDefinitionProps,
+  TimeTableProps,
+  ResourceDataProps,
+} from "./properties";
 
 const LOW_PRIORITY = 500;
 
-const BSIM_GROUPS = [StartInitiatorGroup, DurationGroup, SetupDurationGroup];
+const BSIM_GROUPS = [
+  StartInitiatorGroup,
+  DurationGroup,
+  SetupDurationGroup,
+  SimulationPropertiesGroup,
+  DefinitionPropertiesGroup,
+  TimeTablePropertiesGroup,
+  ResourcePropertiesGroup,
+];
 
 /**
  * Provides `camunda` namespace properties.
@@ -161,12 +175,42 @@ function SetupDurationGroup(element) {
   return null;
 }
 
-function ErrorsGroup(element, injector) {
+function DefinitionPropertiesGroup(element) {
   const group = {
-    label: "Errors",
-    id: "Bsim__Errors",
+    label: "Simulation Definition",
+    id: "Bsim__Definition",
+    component: Group,
+    entries: [...BsimDefinitionProps({ element })],
+  };
+
+  if (group.entries.length) {
+    return group;
+  }
+
+  return null;
+}
+
+function SimulationPropertiesGroup(element) {
+  const group = {
+    label: "Simulation Configuration",
+    id: "Bsim__Configuration",
+    component: Group,
+    entries: [...BsimConfigurationProps({ element })],
+  };
+
+  if (group.entries.length) {
+    return group;
+  }
+
+  return null;
+}
+
+function TimeTablePropertiesGroup(element, injector) {
+  const group = {
+    label: "Simulation Timetables",
+    id: "Bsim__TimeTables",
     component: ListGroup,
-    ...ErrorsProps({ element, injector }),
+    ...TimeTableProps({ element, injector }),
   };
 
   if (group.items) {
@@ -176,60 +220,15 @@ function ErrorsGroup(element, injector) {
   return null;
 }
 
-function UserAssignmentGroup(element) {
+function ResourcePropertiesGroup(element, injector) {
   const group = {
-    label: "User assignment",
-    id: "Bsim__UserAssignment",
-    component: Group,
-    entries: [...UserAssignmentProps({ element })],
+    label: "Simulation Resources",
+    id: "Bsim__Resources",
+    component: ListGroup,
+    ...ResourceDataProps({ element, injector }),
   };
 
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function ScriptGroup(element) {
-  const group = {
-    label: "Script",
-    id: "Bsim__Script",
-    component: Group,
-    entries: [...ScriptTaskProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function CallActivityGroup(element) {
-  const group = {
-    label: "Called element",
-    id: "Bsim__CallActivity",
-    component: Group,
-    entries: [...CallActivityProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function ConditionGroup(element) {
-  const group = {
-    label: "Condition",
-    id: "Bsim__Condition",
-    component: Group,
-    entries: [...ConditionProps({ element })],
-  };
-
-  if (group.entries.length) {
+  if (group.items) {
     return group;
   }
 
@@ -251,336 +250,6 @@ function StartInitiatorGroup(element, injector) {
   };
 
   if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function ExternalTaskGroup(element) {
-  const group = {
-    label: "External task",
-    id: "Bsim__ExternalTask",
-    component: Group,
-    entries: [...ExternalTaskPriorityProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function AsynchronousContinuationsGroup(element) {
-  const group = {
-    label: "Asynchronous continuations",
-    id: "Bsim__AsynchronousContinuations",
-    component: Group,
-    entries: [...AsynchronousContinuationsProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function JobExecutionGroup(element) {
-  const group = {
-    label: "Job execution",
-    id: "Bsim__JobExecution",
-    component: Group,
-    entries: [...JobExecutionProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function CandidateStarterGroup(element) {
-  const group = {
-    label: "Candidate starter",
-    id: "Bsim__CandidateStarter",
-    component: Group,
-    entries: [...CandidateStarterProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function FieldInjectionGroup(element, injector) {
-  const group = {
-    label: "Field injections",
-    id: "Bsim__FieldInjection",
-    component: ListGroup,
-    ...FieldInjectionProps({ element, injector }),
-  };
-
-  if (group.items) {
-    return group;
-  }
-
-  return null;
-}
-
-function HistoryCleanupGroup(element) {
-  const group = {
-    label: "History cleanup",
-    id: "Bsim__HistoryCleanup",
-    component: Group,
-    entries: [...HistoryCleanupProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function TasklistGroup(element) {
-  const group = {
-    label: "Tasklist",
-    id: "Bsim__Tasklist",
-    component: Group,
-    entries: [...TasklistProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function InMappingGroup(element, injector) {
-  const group = {
-    label: "In mappings",
-    id: "Bsim__InMapping",
-    component: ListGroup,
-    ...InMappingProps({ element, injector }),
-  };
-
-  if (group.items) {
-    return group;
-  }
-
-  return null;
-}
-
-function InMappingPropagationGroup(element) {
-  const group = {
-    label: "In mapping propagation",
-    id: "Bsim__InMappingPropagation",
-    component: Group,
-    entries: [...InMappingPropagationProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function OutMappingGroup(element, injector) {
-  const group = {
-    label: "Out mappings",
-    id: "Bsim__OutMapping",
-    component: ListGroup,
-    ...OutMappingProps({ element, injector }),
-  };
-
-  if (group.items) {
-    return group;
-  }
-
-  return null;
-}
-
-function OutMappingPropagationGroup(element) {
-  const group = {
-    label: "Out mapping propagation",
-    id: "Bsim__OutMappingPropagation",
-    component: Group,
-    entries: [...OutMappingPropagationProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function ProcessVariablesGroup(element, injector) {
-  const group = {
-    label: "Process variables",
-    id: "Bsim__ProcessVariables",
-    component: ListGroup,
-    ...ProcessVariablesProps({ element, injector }),
-  };
-
-  if (group.items) {
-    return group;
-  }
-
-  return null;
-}
-
-function FormDataGroup(element, injector) {
-  const group = {
-    label: "Form fields",
-    id: "Bsim__FormData",
-    component: ListGroup,
-    ...FormDataProps({ element, injector }),
-  };
-
-  if (group.items) {
-    return group;
-  }
-
-  return null;
-}
-
-function BusinessKeyGroup(element) {
-  const group = {
-    label: "Business key",
-    id: "Bsim__BusinessKey",
-    component: Group,
-    entries: [...BusinessKeyProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function FormGroup(element) {
-  const group = {
-    label: "Forms",
-    id: "Bsim__Form",
-    component: Group,
-    entries: [...FormProps({ element })],
-  };
-
-  if (group.entries.length) {
-    return group;
-  }
-
-  return null;
-}
-
-function ExecutionListenerGroup(element, injector) {
-  const group = {
-    label: "Execution listeners",
-    id: "Bsim__ExecutionListener",
-    component: ListGroup,
-    ...ExecutionListenerProps({ element, injector }),
-  };
-
-  if (group.items) {
-    return group;
-  }
-
-  return null;
-}
-
-function TaskListenerGroup(element, injector) {
-  const group = {
-    label: "Task listeners",
-    id: "Bsim__TaskListener",
-    component: ListGroup,
-    ...TaskListenerProps({ element, injector }),
-  };
-
-  if (group.items) {
-    return group;
-  }
-
-  return null;
-}
-
-function InputGroup(element, injector) {
-  const group = {
-    label: "Inputs",
-    id: "Bsim__Input",
-    component: ListGroup,
-    ...InputProps({ element, injector }),
-  };
-
-  if (group.items) {
-    return group;
-  }
-
-  return null;
-}
-
-function OutputGroup(element, injector) {
-  const group = {
-    label: "Outputs",
-    id: "Bsim__Output",
-    component: ListGroup,
-    ...OutputProps({ element, injector }),
-  };
-
-  if (group.items) {
-    return group;
-  }
-
-  return null;
-}
-
-function ConnectorInputGroup(element, injector) {
-  const group = {
-    label: "Connector inputs",
-    id: "Bsim__ConnectorInput",
-    component: ListGroup,
-    ...ConnectorInputProps({ element, injector }),
-  };
-
-  if (group.items) {
-    return group;
-  }
-
-  return null;
-}
-
-function ConnectorOutputGroup(element, injector) {
-  const group = {
-    label: "Connector outputs",
-    id: "Bsim__ConnectorOutput",
-    component: ListGroup,
-    ...ConnectorOutputProps({ element, injector }),
-  };
-
-  if (group.items) {
-    return group;
-  }
-
-  return null;
-}
-
-function ExtensionPropertiesGroup(element, injector) {
-  const group = {
-    label: "Extension properties",
-    id: "Bsim__ExtensionProperties",
-    component: ListGroup,
-    ...ExtensionPropertiesProps({ element, injector }),
-  };
-
-  if (group.items) {
     return group;
   }
 
