@@ -10,18 +10,24 @@ import {
   BsimDefinitionProps,
   TimeTableProps,
   ResourceDataProps,
+  GatewaySplitProps,
+  SequenceSplitProps,
+  EventArrivalProps,
+  ArrivalRateProps,
 } from "./properties";
 
 const LOW_PRIORITY = 500;
 
 const BSIM_GROUPS = [
-  StartInitiatorGroup,
+  ArrivalRateGroup,
   DurationGroup,
   SetupDurationGroup,
   SimulationPropertiesGroup,
   DefinitionPropertiesGroup,
   TimeTablePropertiesGroup,
   ResourcePropertiesGroup,
+  GatewayPropertiesGroup,
+  EventArrivalGroup,
 ];
 
 /**
@@ -158,6 +164,21 @@ function DurationGroup(element) {
   return null;
 }
 
+function EventArrivalGroup(element) {
+  const group = {
+    label: "Event Arrival",
+    id: "Bsim__EventArrival",
+    component: Group,
+    entries: [...EventArrivalProps({ element })],
+  };
+
+  if (group.entries.length) {
+    return group;
+  }
+
+  return null;
+}
+
 function SetupDurationGroup(element) {
   const group = {
     label: "Setup Duration",
@@ -235,17 +256,35 @@ function ResourcePropertiesGroup(element, injector) {
   return null;
 }
 
-function StartInitiatorGroup(element, injector) {
+function ArrivalRateGroup(element, injector) {
   const group = {
     label: "Arrival Rate",
     id: "Bsim__ArrivalRate",
     component: Group,
     entries: [
-      ...DurationSelectionProps({
+      ...ArrivalRateProps({
         element,
         type: "bsim:arrivalRate",
         injector,
       }),
+    ],
+  };
+
+  if (group.entries.length) {
+    return group;
+  }
+
+  return null;
+}
+
+function GatewayPropertiesGroup(element) {
+  const group = {
+    label: "Simulation Splits",
+    id: "Bsim__Split",
+    component: Group,
+    entries: [
+      ...GatewaySplitProps({ element }),
+      ...SequenceSplitProps({ element }),
     ],
   };
 
