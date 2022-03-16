@@ -14,6 +14,7 @@ import {
   SequenceSplitProps,
   EventArrivalProps,
   ArrivalRateProps,
+  TaskResourceProps,
 } from "./properties";
 
 const LOW_PRIORITY = 500;
@@ -28,6 +29,7 @@ const BSIM_GROUPS = [
   ResourcePropertiesGroup,
   GatewayPropertiesGroup,
   EventArrivalGroup,
+  TaskResourcePropertiesGroup,
 ];
 
 /**
@@ -166,7 +168,7 @@ function DurationGroup(element) {
 
 function EventArrivalGroup(element) {
   const group = {
-    label: "Event Arrival",
+    label: "Simulation Event Arrival",
     id: "Bsim__EventArrival",
     component: Group,
     entries: [...EventArrivalProps({ element })],
@@ -289,6 +291,21 @@ function GatewayPropertiesGroup(element) {
   };
 
   if (group.entries.length) {
+    return group;
+  }
+
+  return null;
+}
+
+function TaskResourcePropertiesGroup(element, injector) {
+  const group = {
+    label: "Simulation Resources",
+    id: "Bsim__Resources",
+    component: ListGroup,
+    ...TaskResourceProps({ element, injector }),
+  };
+
+  if (group.items) {
     return group;
   }
 

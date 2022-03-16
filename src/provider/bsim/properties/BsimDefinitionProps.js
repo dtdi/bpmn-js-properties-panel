@@ -68,8 +68,12 @@ function AssignmentStrategyField(props) {
 
   const getOptions = () => {
     return [
-      { value: "simulationTime", label: translate("simulationTime") },
+      { value: "simulationTime", label: translate("simulationTime (default)") },
       { value: "priority", label: translate("priority") },
+      {
+        value: "priority,simulationTime",
+        label: translate("priority,simulationTime"),
+      },
     ];
   };
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bsim="http://bsim.hpi.uni-potsdam.de/scylla/simModel" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:abpr="http://github.com/dtdi/dtdi" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bsim="http://bsim.hpi.uni-potsdam.de/scylla/simModel" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:abpr="http://github.com/dtdi/dtdi" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
   <bpmn:process id="Process_1" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1" name="Start">
       <bpmn:outgoing>Flow_16hfxyw</bpmn:outgoing>
@@ -18,6 +18,11 @@
     <bpmn:task id="Activity_11zxkzw" name="B">
       <bpmn:incoming>Flow_10zvoav</bpmn:incoming>
       <bpmn:outgoing>Flow_0197qua</bpmn:outgoing>
+      <bpmn:property id="Property_00pgo50" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_0h5s6t3">
+        <bpmn:sourceRef>DataObjectReference_176etx7</bpmn:sourceRef>
+        <bpmn:targetRef>Property_00pgo50</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
     </bpmn:task>
     <bpmn:sequenceFlow id="Flow_10zvoav" sourceRef="Gateway_110evmr" targetRef="Activity_11zxkzw" />
     <bpmn:task id="Activity_0r5lvus" name="C">
@@ -52,9 +57,16 @@
       <bpmn:outgoing>Flow_1qxvjur</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1ikkm3r" />
     </bpmn:intermediateCatchEvent>
+    <bpmn:dataObjectReference id="DataObjectReference_176etx7" name="DO1" dataObjectRef="DataObject_08eu4x4" />
+    <bpmn:dataObject id="DataObject_08eu4x4" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNEdge id="Flow_1qxvjur_di" bpmnElement="Flow_1qxvjur">
+        <di:waypoint x="410" y="208" />
+        <di:waypoint x="410" y="230" />
+        <di:waypoint x="470" y="230" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0sn8zid_di" bpmnElement="Flow_0sn8zid">
         <di:waypoint x="690" y="350" />
         <di:waypoint x="742" y="350" />
@@ -87,11 +99,6 @@
       <bpmndi:BPMNEdge id="Flow_16hfxyw_di" bpmnElement="Flow_16hfxyw">
         <di:waypoint x="215" y="117" />
         <di:waypoint x="250" y="117" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1qxvjur_di" bpmnElement="Flow_1qxvjur">
-        <di:waypoint x="410" y="208" />
-        <di:waypoint x="410" y="230" />
-        <di:waypoint x="470" y="230" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
@@ -142,12 +149,22 @@
           <dc:Bounds x="330" y="180" width="14" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_176etx7_di" bpmnElement="DataObjectReference_176etx7">
+        <dc:Bounds x="382" y="-35" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="389" y="22" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0avfry9_di" bpmnElement="Event_0nmu2ff">
         <dc:Bounds x="502" y="252" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="513" y="295" width="14" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataInputAssociation_0h5s6t3_di" bpmnElement="DataInputAssociation_0h5s6t3">
+        <di:waypoint x="418" y="13" />
+        <di:waypoint x="473" y="81" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
   <bsim:simulationConfiguration processRef="Process_1" processInstances="200" startDateTime="2022-03-07T00:00:00.000+01:00" randomSeed="16956">
@@ -159,6 +176,13 @@
       </bsim:arrivalRate>
     </bsim:startEvent>
     <bsim:task id="Activity_028cnws">
+      <bsim:resources>
+        <bsim:resource id="defaultResource" amount="1">
+          <bsim:assignmentDefinition>
+            <bsim:priority>2</bsim:priority>
+          </bsim:assignmentDefinition>
+        </bsim:resource>
+      </bsim:resources>
       <bsim:duration timeUnit="MINUTES">
         <bsim:normalDistribution>
           <bsim:mean>20</bsim:mean>
@@ -167,6 +191,9 @@
       </bsim:duration>
     </bsim:task>
     <bsim:task id="Activity_11zxkzw">
+      <bsim:resources>
+        <bsim:resource id="defaultResource" amount="1" />
+      </bsim:resources>
       <bsim:duration timeUnit="MINUTES">
         <bsim:normalDistribution>
           <bsim:mean>20</bsim:mean>
@@ -175,6 +202,9 @@
       </bsim:duration>
     </bsim:task>
     <bsim:task id="Activity_0r5lvus">
+      <bsim:resources>
+        <bsim:resource id="defaultResource" amount="1" />
+      </bsim:resources>
       <bsim:duration timeUnit="MINUTES">
         <bsim:normalDistribution>
           <bsim:mean>20</bsim:mean>
@@ -194,6 +224,9 @@
       </bsim:boundaryEvents>
     </bsim:task>
     <bsim:task id="Activity_0ennpyy">
+      <bsim:resources>
+        <bsim:resource id="defaultResource" amount="1" />
+      </bsim:resources>
       <bsim:duration timeUnit="MINUTES">
         <bsim:normalDistribution>
           <bsim:mean>20</bsim:mean>
@@ -201,6 +234,7 @@
         </bsim:normalDistribution>
       </bsim:duration>
     </bsim:task>
+    <bsim:dataObject id="DataObjectReference_176etx7" name="DO1" />
     <bsim:catchEvent id="Event_0f1y501" name="E1">
       <bsim:arrivalRate timeUnit="MINUTES">
         <bsim:normalDistribution>

@@ -11,3 +11,4 @@ export { BsimDefinitionProps } from "./BsimDefinitionProps";
 export { TimeTableProps } from "./TimeTableProps";
 export { ResourceDataProps } from "./ResourceDataProps";
 export { GatewaySplitProps, SequenceSplitProps } from "./GatewaySplitProps";
+export { TaskResourceProps } from "./TaskResourceProps";
