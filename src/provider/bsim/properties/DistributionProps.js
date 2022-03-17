@@ -15,9 +15,11 @@ import { createElement } from "../../../utils/ElementUtil";
 import { getDescr, getName } from "../utils/helper";
 
 export function DistributionProps(props) {
-  const { element, idPrefix, distribution, container } = props;
+  const { element, idPrefix, distribution, container, injector } = props;
 
   const entries = [];
+
+  const moddle = injector.get("moddle");
 
   entries.push({
     id: `${idPrefix}-distributionType`,

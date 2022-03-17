@@ -94,66 +94,15 @@ BsimPropertiesProvider.$inject = ["propertiesPanel", "injector"];
 /**
  * This ensures the <Implementation> group always locates after <Documentation>
  */
-function moveImplementationGroup(groups) {
-  const documentationGroupIdx = findGroupIndex(groups, "documentation");
 
-  if (documentationGroupIdx < 0) {
-    return;
-  }
-
-  return moveGroup(groups, "Bsim__Implementation", documentationGroupIdx + 1);
-}
-
-function updateGeneralGroup(groups, element) {
-  const generalGroup = findGroup(groups, "general");
-
-  if (!generalGroup) {
-    return;
-  }
-}
-
-function updateErrorGroup(groups, element) {
-  const errorGroup = findGroup(groups, "error");
-
-  if (!errorGroup) {
-    return;
-  }
-
-  const { entries } = errorGroup;
-
-  ErrorProps({ element, entries });
-}
-
-function updateMultiInstanceGroup(groups, element) {
-  const multiInstanceGroup = findGroup(groups, "multiInstance");
-
-  if (!multiInstanceGroup) {
-    return;
-  }
-
-  const { entries } = multiInstanceGroup;
-
-  MultiInstanceProps({ element, entries });
-}
-
-function updateEscalationGroup(groups, element) {
-  const escalationGroup = findGroup(groups, "escalation");
-
-  if (!escalationGroup) {
-    return;
-  }
-
-  const { entries } = escalationGroup;
-
-  EscalationProps({ element, entries });
-}
-
-function DurationGroup(element) {
+function DurationGroup(element, injector) {
   const group = {
     label: "Duration",
     id: "Bsim__Duration",
     component: Group,
-    entries: [...DurationSelectionProps({ element, type: "bsim:duration" })],
+    entries: [
+      ...DurationSelectionProps({ element, type: "bsim:duration", injector }),
+    ],
   };
 
   if (group.entries.length) {
@@ -163,12 +112,12 @@ function DurationGroup(element) {
   return null;
 }
 
-function EventArrivalGroup(element) {
+function EventArrivalGroup(element, injector) {
   const group = {
     label: "Simulation Event Arrival",
     id: "Bsim__EventArrival",
     component: Group,
-    entries: [...EventArrivalProps({ element })],
+    entries: [...EventArrivalProps({ element, injector })],
   };
 
   if (group.entries.length) {
@@ -193,13 +142,17 @@ function DataObjectFieldGroup(element, injector) {
   return null;
 }
 
-function SetupDurationGroup(element) {
+function SetupDurationGroup(element, injector) {
   const group = {
     label: "Setup Duration",
     id: "Bsim__SetupDuration",
     component: Group,
     entries: [
-      ...DurationSelectionProps({ element, type: "bsim:setUpDuration" }),
+      ...DurationSelectionProps({
+        element,
+        type: "bsim:setUpDuration",
+        injector,
+      }),
     ],
   };
 

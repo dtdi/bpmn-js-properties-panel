@@ -13,7 +13,7 @@ import { getDescr, getName } from "../utils/helper";
 import { DistributionProps } from "./DistributionProps";
 import { TimeUnitProps } from "./TimeUnitProps";
 
-function TimeAndDistributionProps({ element, idPrefix }) {
+function TimeAndDistributionProps({ element, idPrefix, injector }) {
   const entries = [];
 
   const bsimObject = getBsimObject(element);
@@ -36,6 +36,7 @@ function TimeAndDistributionProps({ element, idPrefix }) {
         distribution,
         container: container,
         idPrefix: idPrefix,
+        injector,
       })
     );
   }
@@ -43,7 +44,7 @@ function TimeAndDistributionProps({ element, idPrefix }) {
   return entries;
 }
 
-export function DurationSelectionProps({ element, type }) {
+export function DurationSelectionProps({ element, type, injector }) {
   const idPrefix = type;
 
   if (
@@ -53,11 +54,11 @@ export function DurationSelectionProps({ element, type }) {
     return [];
   }
 
-  return TimeAndDistributionProps({ element, idPrefix });
+  return TimeAndDistributionProps({ element, idPrefix, injector });
 }
 
 export function ArrivalRateProps(props) {
-  const { element, type } = props;
+  const { element, type, injector } = props;
 
   if (!is(element, "bpmn:StartEvent") || !["bsim:arrivalRate"].includes(type)) {
     return [];
@@ -65,10 +66,10 @@ export function ArrivalRateProps(props) {
 
   const idPrefix = type;
 
-  return TimeAndDistributionProps({ element, idPrefix });
+  return TimeAndDistributionProps({ element, idPrefix, injector });
 }
 
-export function EventArrivalProps({ element }) {
+export function EventArrivalProps({ element, injector }) {
   const idPrefix = "bsim:arrivalRate";
 
   const bsimObject = getBsimObject(element);
@@ -77,7 +78,9 @@ export function EventArrivalProps({ element }) {
     return [];
   }
 
-  const entries = [...TimeAndDistributionProps({ element, idPrefix })];
+  const entries = [
+    ...TimeAndDistributionProps({ element, idPrefix, injector }),
+  ];
 
   if (is(bsimObject, "bsim:boundaryEvent")) {
     entries.push({

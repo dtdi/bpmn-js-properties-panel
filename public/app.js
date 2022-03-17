@@ -40,7 +40,6 @@ var bpmnModeler = new BpmnModeler({
 });
 
 window.modeler = bpmnModeler;
-window.moddle = bpmnModeler.get("moddle");
 
 container.removeClass("with-diagram");
 

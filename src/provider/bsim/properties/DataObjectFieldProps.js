@@ -45,6 +45,7 @@ export function DataObjectFieldProps({ element, injector }) {
         idPrefix: id,
         element,
         field,
+        injector,
       }),
       remove: removeFactory({ commandStack, element, field }),
     };
@@ -56,7 +57,7 @@ export function DataObjectFieldProps({ element, injector }) {
   };
 }
 
-function FieldData({ idPrefix, field }) {
+function FieldData({ idPrefix, field, injector }) {
   return [
     { id: `${idPrefix}-name`, field, component: FieldName },
     { id: `${idPrefix}-type`, field, component: FieldType },
@@ -64,6 +65,7 @@ function FieldData({ idPrefix, field }) {
       idPrefix: `${idPrefix}-distribution`,
       container: field,
       distribution: field.get("distribution"),
+      injector,
     }),
   ];
 }
