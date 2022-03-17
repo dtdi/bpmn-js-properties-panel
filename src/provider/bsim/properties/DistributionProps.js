@@ -62,8 +62,6 @@ function DistributionType(props) {
   const bpmnFactory = useService("bpmnFactory");
 
   const getOptions = () => {
-    console.log(container);
-
     const filter = is(container, "bsim:field")
       ? "DataTypeDistribution"
       : "DurationDistribution";

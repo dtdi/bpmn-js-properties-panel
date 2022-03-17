@@ -27,8 +27,6 @@ export function TimeUnitProps(props) {
   };
 
   const setValue = (value) => {
-    console.log(bsimObject, container, value);
-
     // (1) remove optional distribution
     if (value === "" && isOptional()) {
       bsimObject.set(idPrefix, undefined);

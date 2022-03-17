@@ -74,8 +74,6 @@ export function SequenceSplitProps({ element, injector }) {
     return [];
   }
 
-  console.log(element);
-
   return [
     {
       id: `outgoingSequenceFlow`,

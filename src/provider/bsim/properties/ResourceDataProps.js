@@ -272,7 +272,6 @@ function TimeTable({ id, element, resource }) {
 
 function ResourceInstance(props) {
   const { element, idPrefix, instance } = props;
-  console.log(props);
 
   return [
     {

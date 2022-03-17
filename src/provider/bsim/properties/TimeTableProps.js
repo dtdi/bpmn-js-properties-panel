@@ -1,6 +1,5 @@
 import {
   CollapsibleEntry,
-  isSelectEntryEdited,
   isTextFieldEntryEdited,
   ListEntry,
   SelectEntry,
@@ -10,7 +9,7 @@ import { getBusinessObject, is } from "bpmn-js/lib/util/ModelUtil";
 import { without } from "min-dash";
 import { useService } from "../../../hooks";
 import { createElement } from "../../../utils/ElementUtil";
-import { DateTime } from "luxon";
+// import { DateTime } from "luxon";
 
 import { getDescr, getName } from "../utils/helper";
 
