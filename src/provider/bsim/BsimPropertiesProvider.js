@@ -15,6 +15,7 @@ import {
   EventArrivalProps,
   ArrivalRateProps,
   TaskResourceProps,
+  DataObjectFieldProps,
 } from "./properties";
 
 const LOW_PRIORITY = 500;
@@ -30,6 +31,7 @@ const BSIM_GROUPS = [
   GatewayPropertiesGroup,
   EventArrivalGroup,
   TaskResourcePropertiesGroup,
+  DataObjectFieldGroup,
 ];
 
 /**
@@ -175,6 +177,21 @@ function EventArrivalGroup(element) {
   };
 
   if (group.entries.length) {
+    return group;
+  }
+
+  return null;
+}
+
+function DataObjectFieldGroup(element, injector) {
+  const group = {
+    label: "Simulation Data Fields",
+    id: "Bsim__DataFields",
+    component: ListGroup,
+    ...DataObjectFieldProps({ element, injector }),
+  };
+
+  if (group.items) {
     return group;
   }
 

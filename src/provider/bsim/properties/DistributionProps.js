@@ -27,7 +27,7 @@ export function DistributionProps(props) {
     container: container,
   });
 
-  if (!is(distribution, "bsim:arbitraryFiniteProbabilityDistribution")) {
+  if (!is(distribution, "bsim:KeyValueDistribution")) {
     const typeDescriptor = moddle.getTypeDescriptor(distribution.$type);
 
     entries.push(
@@ -62,9 +62,15 @@ function DistributionType(props) {
   const bpmnFactory = useService("bpmnFactory");
 
   const getOptions = () => {
+    console.log(container);
+
+    const filter = is(container, "bsim:field")
+      ? "DataTypeDistribution"
+      : "DurationDistribution";
+
     return moddle
       .getPackage("bsim")
-      .types.filter((e) => e.superClass?.includes("Distribution"))
+      .types.filter((e) => e.superClass?.includes(filter))
       .map((e) => {
         return {
           value: `bsim:${e.name}`,
@@ -393,7 +399,7 @@ function inflate(oldDistribution, newType, moddle, bpmnFactory) {
 
   const newDistribution = moddle.create(typeDescriptor);
 
-  if (!is(newDistribution, "bsim:arbitraryFiniteProbabilityDistribution")) {
+  if (!is(newDistribution, "bsim:KeyValueDistribution")) {
     typeDescriptor.properties.forEach((property) => {
       newDistribution.set(
         property.name,

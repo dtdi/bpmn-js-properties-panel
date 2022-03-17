@@ -12,3 +12,4 @@ export { TimeTableProps } from "./TimeTableProps";
 export { ResourceDataProps } from "./ResourceDataProps";
 export { GatewaySplitProps, SequenceSplitProps } from "./GatewaySplitProps";
 export { TaskResourceProps } from "./TaskResourceProps";
+export { DataObjectFieldProps } from "./DataObjectFieldProps";
