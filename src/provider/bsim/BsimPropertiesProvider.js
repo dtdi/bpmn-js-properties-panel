@@ -72,13 +72,8 @@ export default class BsimPropertiesProvider {
       groups = groups.concat(this._getGroups(element));
 
       // (2) update existing groups with Camunda Platform specific properties
-      updateGeneralGroup(groups, element);
-      updateErrorGroup(groups, element);
-      updateEscalationGroup(groups, element);
-      updateMultiInstanceGroup(groups, element);
-
-      // (3) move groups given specific priorities
-      moveImplementationGroup(groups);
+      //updateGeneralGroup(groups, element);
+      //updateMultiInstanceGroup(groups, element);
 
       return groups;
     };
