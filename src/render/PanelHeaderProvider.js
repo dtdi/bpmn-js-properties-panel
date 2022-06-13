@@ -13,6 +13,10 @@ import {
   isInterrupting
 } from 'bpmn-js/lib/util/DiUtil';
 
+import {
+  useService
+} from '../hooks';
+
 import iconsByType from '../icons';
 
 export function getConcreteType(element) {
@@ -64,6 +68,14 @@ export function getConcreteType(element) {
 
 export const PanelHeaderProvider = {
 
+  getDocumentationRef: (element) => {
+    const elementTemplates = getTemplatesService();
+
+    if (elementTemplates) {
+      return getTemplateDocumentation(element, elementTemplates);
+    }
+  },
+
   getElementLabel: (element) => {
     if (is(element, 'bpmn:Process')) {
       return getBusinessObject(element).name;
@@ -75,10 +87,30 @@ export const PanelHeaderProvider = {
   getElementIcon: (element) => {
     const concreteType = getConcreteType(element);
 
+    const elementTemplates = getTemplatesService();
+
+    if (elementTemplates) {
+      const template = getTemplate(element, elementTemplates);
+
+      if (template && template.icon) {
+        return () => <img class="bio-properties-panel-header-template-icon" width="32" height="32" src={ template.icon.contents } />;
+      }
+    }
+
     return iconsByType[ concreteType ];
   },
 
   getTypeLabel: (element) => {
+    const elementTemplates = getTemplatesService();
+
+    if (elementTemplates) {
+      const template = getTemplate(element, elementTemplates);
+
+      if (template && template.name) {
+        return template.name;
+      }
+    }
+
     const concreteType = getConcreteType(element);
 
     return concreteType
@@ -137,12 +169,26 @@ function isConditionalFlow(element) {
   return businessObject.conditionExpression && is(sourceBusinessObject, 'bpmn:Activity');
 }
 
-
-// helpers //////////
 function isPlane(element) {
 
   // Backwards compatibility for bpmn-js<8
   const di = element && (element.di || getBusinessObject(element).di);
 
   return is(di, 'bpmndi:BPMNPlane');
+}
+
+function getTemplatesService() {
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  return useService('elementTemplates', false);
+}
+
+function getTemplate(element, elementTemplates) {
+  return elementTemplates.get(element);
+}
+
+function getTemplateDocumentation(element, elementTemplates) {
+  const template = getTemplate(element, elementTemplates);
+
+  return template && template.documentationRef;
 }

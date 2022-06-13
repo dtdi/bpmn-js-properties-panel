@@ -5,6 +5,12 @@ import {
 import { TextFieldEntry, isTextFieldEntryEdited } from '@bpmn-io/properties-panel';
 
 import {
+  getPath,
+  pathConcat,
+  pathEquals
+} from '@philippfromme/moddle-helpers';
+
+import {
   getExtensionElementsList
 } from '../../../utils/ExtensionElementsUtil';
 
@@ -13,7 +19,8 @@ import {
 } from '../../../utils/ElementUtil';
 
 import {
-  useService
+  useService,
+  useShowCallback
 } from '../../../hooks';
 
 
@@ -73,13 +80,33 @@ function InputCollection(props) {
     return setProperty(element, 'inputCollection', value, commandStack, bpmnFactory);
   };
 
+  const businessObject = getBusinessObject(element);
+
+  const loopCharacteristics = getLoopCharacteristics(element),
+        zeebeLoopCharacteristics = getZeebeLoopCharacteristics(loopCharacteristics),
+        path = pathConcat(getPath(zeebeLoopCharacteristics, businessObject), 'inputCollection');
+
+  const show = useShowCallback(businessObject, (event) => {
+    const { error = {} } = event;
+
+    const {
+      requiredExtensionElement,
+      type
+    } = error;
+
+    return pathEquals(event.path, path)
+      || (type === 'extensionElementRequired' && requiredExtensionElement === 'zeebe:LoopCharacteristics');
+  });
+
   return TextFieldEntry({
     element,
     id: 'multiInstance-inputCollection',
     label: translate('Input collection'),
+    feel: 'required',
     getValue,
     setValue,
-    debounce
+    debounce,
+    show
   });
 }
 
@@ -129,13 +156,22 @@ function OutputCollection(props) {
     return setProperty(element, 'outputCollection', value, commandStack, bpmnFactory);
   };
 
+  const businessObject = getBusinessObject(element);
+
+  const loopCharacteristics = getLoopCharacteristics(element),
+        zeebeLoopCharacteristics = getZeebeLoopCharacteristics(loopCharacteristics),
+        path = pathConcat(getPath(zeebeLoopCharacteristics, businessObject), 'outputCollection');
+
+  const show = useShowCallback(businessObject, path);
+
   return TextFieldEntry({
     element,
     id: 'multiInstance-outputCollection',
     label: translate('Output collection'),
     getValue,
     setValue,
-    debounce
+    debounce,
+    show
   });
 }
 
@@ -157,13 +193,23 @@ function OutputElement(props) {
     return setProperty(element, 'outputElement', value, commandStack, bpmnFactory);
   };
 
+  const businessObject = getBusinessObject(element);
+
+  const loopCharacteristics = getLoopCharacteristics(element),
+        zeebeLoopCharacteristics = getZeebeLoopCharacteristics(loopCharacteristics),
+        path = pathConcat(getPath(zeebeLoopCharacteristics, businessObject), 'outputElement');
+
+  const show = useShowCallback(businessObject, path);
+
   return TextFieldEntry({
     element,
     id: 'multiInstance-outputElement',
     label: translate('Output element'),
+    feel: 'required',
     getValue,
     setValue,
-    debounce
+    debounce,
+    show
   });
 }
 
@@ -201,6 +247,7 @@ function CompletionCondition(props) {
     element,
     id: 'multiInstance-completionCondition',
     label: translate('Completion condition'),
+    feel: 'required',
     getValue,
     setValue,
     debounce

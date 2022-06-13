@@ -10,12 +10,43 @@ import {
 
 const DescriptionProvider = {
 
+  assignmentDefinitionAssignee: (element) => {
+    const translate = useService('translate');
+
+    return (
+      <a href="https://docs.camunda.io/docs/components/modeler/bpmn/user-tasks/#assignments" target="_blank" rel="noopener" title={ translate('User task documentation') }>
+        { translate('How to configure a user task') }
+      </a>
+    );
+  },
+
   conditionExpression: (element) => {
     const translate = useService('translate');
 
     return (
       <a href="https://docs.camunda.io/docs/reference/bpmn-processes/exclusive-gateways/exclusive-gateways#conditions" target="_blank" rel="noopener" title={ translate('Conditions documentation') }>
         { translate('How to define conditions') }
+      </a>
+    );
+  },
+
+  decisionId: (element) => {
+    const translate = useService('translate');
+
+    return (
+      <a href="https://docs.camunda.io/docs/reference/bpmn-processes/business-rule-tasks/business-rule-tasks/#defining-a-task" target="_blank" rel="noopener" title={ translate('Business rule task documentation') }>
+        { translate('How to configure a business rule task') }
+      </a>
+    );
+
+  },
+
+  formType: (element) => {
+    const translate = useService('translate');
+
+    return (
+      <a href="https://docs.camunda.io/docs/components/modeler/bpmn/user-tasks/#user-task-forms" target="_blank" rel="noopener" title={ translate('User task form documentation') }>
+        { translate('How to link a form') }
       </a>
     );
   },
@@ -94,6 +125,24 @@ const DescriptionProvider = {
         </a>
       );
     }
+
+    if (is(element, 'bpmn:ThrowEvent')) {
+      return (
+        <a href="https://docs.camunda.io/docs/components/modeler/bpmn/message-events/#message-throw-events" target="_blank" rel="noopener" title={ translate('Message throw event documentation') }>
+          { translate('How to configure a message throw event') }
+        </a>
+      );
+    }
+  },
+
+  'multiInstance-inputCollection': (element) => {
+    const translate = useService('translate');
+
+    return (
+      <a href="https://docs.camunda.io/docs/components/modeler/bpmn/multi-instance/#defining-the-collection-to-iterate-over" target="_blank" rel="noopener" title={ translate('Multi instance documentation') }>
+        { translate('How to configure a multi instance activity') }
+      </a>
+    );
   },
 
   errorCode: (element) => {

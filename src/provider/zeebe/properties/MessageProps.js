@@ -1,4 +1,5 @@
 import {
+  getBusinessObject,
   is
 } from 'bpmn-js/lib/util/ModelUtil';
 
@@ -9,7 +10,14 @@ import {
 import { TextFieldEntry, isTextFieldEntryEdited } from '@bpmn-io/properties-panel';
 
 import {
-  useService
+  getPath,
+  pathConcat,
+  pathEquals
+} from '@philippfromme/moddle-helpers';
+
+import {
+  useService,
+  useShowCallback
 } from '../../../hooks';
 
 import {
@@ -32,19 +40,71 @@ export function MessageProps(props) {
 
   const message = getMessage(element);
 
-  if (!message || !canHaveSubscriptionCorrelationKey(element)) {
-    return [];
+  const entries = [];
+
+  if (message) {
+    entries.push(
+      {
+        id: 'messageName',
+        component: MessageName,
+        isEdited: isTextFieldEntryEdited
+      }
+    );
   }
 
-  const entries = [
-    {
+  if (message && canHaveSubscriptionCorrelationKey(element)) {
+    entries.push({
       id: 'messageSubscriptionCorrelationKey',
       component: SubscriptionCorrelationKey,
       isEdited: isTextFieldEntryEdited
-    },
-  ];
+    });
+  }
 
   return entries;
+}
+
+
+function MessageName(props) {
+  const { element } = props;
+
+  const commandStack = useService('commandStack');
+  const translate = useService('translate');
+  const debounce = useService('debounceInput');
+
+  const message = getMessage(element);
+
+  const getValue = () => {
+    return message.get('name');
+  };
+
+  const setValue = (value) => {
+    return commandStack.execute(
+      'element.updateModdleProperties',
+      {
+        element,
+        moddleElement: message,
+        properties: {
+          name: value
+        }
+      }
+    );
+  };
+
+  const businessObject = getBusinessObject(element),
+        path = pathConcat(getPath(message, businessObject), 'name');
+
+  const show = useShowCallback(businessObject, path);
+
+  return TextFieldEntry({
+    element,
+    id: 'messageName',
+    label: translate('Name'),
+    feel: 'optional',
+    getValue,
+    setValue,
+    debounce,
+    show
+  });
 }
 
 function SubscriptionCorrelationKey(props) {
@@ -122,13 +182,26 @@ function SubscriptionCorrelationKey(props) {
     commandStack.execute('properties-panel.multi-command-executor', commands);
   };
 
+  const businessObject = getBusinessObject(element),
+        subscription = getSubscription(businessObject),
+        path = pathConcat(getPath(subscription, businessObject), 'correlationKey');
+
+  const show = useShowCallback(businessObject, (event) => {
+    const { error = {} } = event;
+
+    return pathEquals(event.path, path)
+      || (error.type === 'extensionElementRequired' && error.requiredExtensionElement === 'zeebe:Subscription');
+  });
+
   return TextFieldEntry({
     element,
     id: 'messageSubscriptionCorrelationKey',
     label: translate('Subscription correlation key'),
+    feel: 'required',
     getValue,
     setValue,
-    debounce
+    debounce,
+    show
   });
 }
 

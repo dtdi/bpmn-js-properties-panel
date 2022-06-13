@@ -21,12 +21,12 @@ import {
   ZEEBE_TASK_HEADER_TYPE
 } from '../util/bindingTypes';
 
-
 export default class TemplateElementFactory {
 
-  constructor(bpmnFactory, elementFactory) {
+  constructor(bpmnFactory, elementFactory, moddle) {
     this._bpmnFactory = bpmnFactory;
     this._elementFactory = elementFactory;
+    this._moddle = moddle;
 
     this._providers = {
       [PROPERTY_TYPE]: PropertyBindingProvider,
@@ -47,22 +47,24 @@ export default class TemplateElementFactory {
 
     const {
       appliesTo,
+      elementType,
       properties
     } = template;
 
     const elementFactory = this._elementFactory;
     const bpmnFactory = this._bpmnFactory;
+    const moddle = this._moddle;
     const providers = this._providers;
 
     // (0) make sure template is valid
-    const errors = validate([ template ]);
+    const errors = validate([ template ], moddle);
 
     // todo(pinussilvestrus): return validation errors
     if (errors && errors.length) {
       throw new Error('template is invalid');
     }
 
-    const type = appliesTo[0];
+    const type = (elementType && elementType.value) || appliesTo[0];
 
     // (1) create element from appliesTo
     const element = elementFactory.createShape({ type });
@@ -75,7 +77,12 @@ export default class TemplateElementFactory {
     // (3) apply template
     this._setModelerTemplate(element, template);
 
-    // (4) apply properties
+    // (4) apply icon
+    if (hasIcon(template)) {
+      this._setModelerTemplateIcon(element, template);
+    }
+
+    // (5) apply properties
     properties.forEach(function(property) {
 
       const {
@@ -126,9 +133,23 @@ export default class TemplateElementFactory {
     businessObject.set('zeebe:modelerTemplate', id);
     businessObject.set('zeebe:modelerTemplateVersion', version);
   }
+
+  _setModelerTemplateIcon(element, template) {
+    const {
+      icon
+    } = template;
+
+    const {
+      contents
+    } = icon;
+
+    const businessObject = getBusinessObject(element);
+
+    businessObject.set('zeebe:modelerTemplateIcon', contents);
+  }
 }
 
-TemplateElementFactory.$inject = [ 'bpmnFactory', 'elementFactory' ];
+TemplateElementFactory.$inject = [ 'bpmnFactory', 'elementFactory', 'moddle' ];
 
 
 // helper ////////////////
@@ -138,6 +159,11 @@ function hasExtensionBindings(template) {
     properties
   } = template;
 
+  // find icon first
+  if (hasIcon(template)) {
+    return true;
+  }
+
   return find(properties, function(property) {
     const {
       binding
@@ -145,4 +171,12 @@ function hasExtensionBindings(template) {
 
     return EXTENSION_BINDING_TYPES.includes(binding.type);
   });
+}
+
+function hasIcon(template) {
+  const {
+    icon
+  } = template;
+
+  return !!(icon && icon.contents);
 }
