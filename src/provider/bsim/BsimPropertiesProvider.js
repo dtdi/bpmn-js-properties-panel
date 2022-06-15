@@ -16,7 +16,9 @@ import {
   ArrivalRateProps,
   TaskResourceProps,
   DataObjectFieldProps,
+  AbprProps,
 } from "./properties";
+import { InputProps, OutputProps } from "../camunda-platform/properties";
 
 const LOW_PRIORITY = 500;
 
@@ -32,6 +34,9 @@ const BSIM_GROUPS = [
   EventArrivalGroup,
   TaskResourcePropertiesGroup,
   DataObjectFieldGroup,
+  InputGroup,
+  OutputGroup,
+  AbprGroup,
 ];
 
 /**
@@ -90,6 +95,51 @@ export default class BsimPropertiesProvider {
 }
 
 BsimPropertiesProvider.$inject = ["propertiesPanel", "injector"];
+
+function AbprGroup(element, injector) {
+  const group = {
+    label: "ABPR",
+    id: "ABPR__Properties",
+    component: ListGroup,
+    ...AbprProps({ element, injector }),
+  };
+
+  if (group.items) {
+    return group;
+  }
+
+  return null;
+}
+
+function InputGroup(element, injector) {
+  const group = {
+    label: "Inputs",
+    id: "CamundaPlatform__Input",
+    component: ListGroup,
+    ...InputProps({ element, injector }),
+  };
+
+  if (group.items) {
+    return group;
+  }
+
+  return null;
+}
+
+function OutputGroup(element, injector) {
+  const group = {
+    label: "Outputs",
+    id: "CamundaPlatform__Output",
+    component: ListGroup,
+    ...OutputProps({ element, injector }),
+  };
+
+  if (group.items) {
+    return group;
+  }
+
+  return null;
+}
 
 /**
  * This ensures the <Implementation> group always locates after <Documentation>

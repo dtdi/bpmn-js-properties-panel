@@ -8,7 +8,7 @@ import {
   SelectEntry,
   TextFieldEntry,
 } from "@bpmn-io/properties-panel";
-import { getBusinessObject, is } from "bpmn-js/lib/util/ModelUtil";
+import { getBusinessObject, is, isAny } from "bpmn-js/lib/util/ModelUtil";
 import { without } from "min-dash";
 
 import { useService } from "../../../hooks";
@@ -30,7 +30,7 @@ const INSTANCE_PROPS = {
 };
 
 export function ResourceDataProps({ element, injector }) {
-  if (!is(element, "bpmn:Process")) {
+  if (!isAny(element, ["bpmn:Process", "bpmn:Collaboration"])) {
     return [];
   }
 

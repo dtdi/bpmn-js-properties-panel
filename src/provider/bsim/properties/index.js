@@ -13,3 +13,4 @@ export { ResourceDataProps } from "./ResourceDataProps";
 export { GatewaySplitProps, SequenceSplitProps } from "./GatewaySplitProps";
 export { TaskResourceProps } from "./TaskResourceProps";
 export { DataObjectFieldProps } from "./DataObjectFieldProps";
+export { AbprProps } from "./AbprProps";

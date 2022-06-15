@@ -4,17 +4,18 @@ import {
   SelectEntry,
   TextFieldEntry,
 } from "@bpmn-io/properties-panel";
-import { getBusinessObject, is } from "bpmn-js/lib/util/ModelUtil";
+import { getBusinessObject, is, isAny } from "bpmn-js/lib/util/ModelUtil";
 
 import { useService } from "../../../hooks";
 import { getDescr, getName } from "../utils/helper";
 
 export function BsimDefinitionProps(props) {
-  const { element } = props;
+  const { element: primaryElement } = props;
 
-  if (!is(element, "bpmn:Process")) {
+  if (!isAny(primaryElement, ["bpmn:Process", "bpmn:Collaboration"])) {
     return [];
   }
+  let element = primaryElement;
 
   const definitions = getBusinessObject(element).$parent;
 
