@@ -29,9 +29,6 @@ export function BsimConfigurationProps(props) {
       bsimObject = element.bsim;
     }
   }
-
-  console.log(bsimObject);
-
   const entries = [];
 
   entries.push(
